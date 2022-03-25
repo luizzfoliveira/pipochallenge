@@ -1,3 +1,8 @@
+export enum Operation {
+  NOVO,
+  UPDATE,
+}
+
 export interface LooseObject {
   [key: string]: any;
 }

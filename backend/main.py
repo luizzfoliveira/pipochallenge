@@ -80,6 +80,29 @@ def get_planos(response: Response):
 		response.status_code = 500
 		return {"message": "Erro ao conectar ao banco de dados"}
 
+@app.get('/api/user')
+def get_user_info(response: Response, ident: str, empresa: str):
+	identificadores = ['Nome', 'CPF']
+
+	try:
+		client = pymongo.MongoClient(f"mongodb://{DBHOST}:{DBPORT}/")
+		usuarios_db = client["planos_usuarios"]
+		usuarios_info = usuarios_db[empresa]
+
+		result = usuarios_info.find_one(
+			{"$or" : [{i: ident} for i in identificadores]},
+			{'_id': 0}
+		)
+		if result is None:
+			response.status_code = 404
+			return {"message": "Usuário não encontrado"}
+		
+		return result
+
+	except:
+		response.status_code = 500
+		return {"message": "Erro ao conectar ao banco de dados"}
+
 @app.post('/api/novo_beneficiario')
 def set_new_user(response: Response, body = Body(...)):
 	# Quais serão os valores tomados como identificadores de usuários
@@ -112,7 +135,7 @@ def set_new_user(response: Response, body = Body(...)):
 		response.status_code = 500
 		return {"message": "Erro ao conectar ao banco de dados"}
 
-@app.patch('/api/add_plano_user')
+@app.patch('/api/update_user')
 def add_plano_user(response: Response, body = Body(...)):
 	# Quais serão os valores tomados como identificadores de usuários
 	identificadores = ['Nome', 'CPF']
@@ -155,7 +178,7 @@ def add_plano_user(response: Response, body = Body(...)):
 		response.status_code = 500
 		return {"message": "Erro ao conectar ao banco de dados"}
 
-@app.patch('/api/change_user_info')
+@app.patch('/api/change_user')
 def change_user_info(response: Response, body = Body(...)):
 	# Quais serão os valores tomados como identificadores de usuários
 	identificadores = ['Nome', 'CPF']
@@ -178,6 +201,35 @@ def change_user_info(response: Response, body = Body(...)):
 			{"$set": info}
 		)
 		if result.matched_count == 0:
+			response.status_code = 404
+			return {"message": "Usuário não encontrado"}
+
+		return body
+
+	except:
+		response.status_code = 500
+		return {"message": "Erro ao conectar ao banco de dados"}
+
+@app.delete('/api/delete_user')
+def delete_user(response: Response, body = Body(...)):
+	identificadores = ['Nome', 'CPF']
+
+	try:
+		empresa = body['empresa']
+		identificador = body['identificador']
+	except:
+		response.status_code = 400
+		return {"message": "Informações faltando"}
+	
+	try:
+		client = pymongo.MongoClient(f"mongodb://{DBHOST}:{DBPORT}/")
+		usuarios_db = client["planos_usuarios"]
+		usuarios_info = usuarios_db[empresa]
+
+		result = usuarios_info.delete_one(
+			{"$or" : [{i: identificador} for i in identificadores]}
+		)
+		if result.deleted_count == 0:
 			response.status_code = 404
 			return {"message": "Usuário não encontrado"}
 

@@ -4,10 +4,11 @@ import { getNecessaryInfo } from "./get-necessary-info";
 import { getPlanos } from "./get-planos";
 import { Options } from "react-select";
 import { Card, Button } from "react-bootstrap";
-import InputInfo from "../user-manipulation/add-user";
+import InputForm from "../add-user";
 
-function SearchPlanos() {
+function SearchPlanos(props: any) {
   const planosSearch = useRef<string>("");
+
   // const info = useRef<string[]>([]);
   async function generateInfo() {
     if (!planosSearch.current) {
@@ -55,7 +56,7 @@ function SearchPlanos() {
           <Button className="generate-info" onClick={generateInfo}>
             Gerar Formulário
           </Button>
-          {showInfo && <InputInfo info={info} />}
+          {showInfo && <InputForm info={info} op={props.op} />}
         </Card.Body>
       </Card>
     </div>

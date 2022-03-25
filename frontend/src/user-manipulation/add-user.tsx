@@ -3,103 +3,112 @@ import { Form, Button, Spinner } from "react-bootstrap";
 import { LooseObject, sortInfo } from "../utils";
 import axios from "axios";
 import { BASEURL } from "../utils";
+import { Operation } from "../utils";
+import { getPreenchidos } from "./get-preenchidos";
 
-function InputInfo(props: any) {
-  async function handleSubmit() {
-    if (selectedFile === undefined) {
-      alert("Por favor, selecione algum arquivo");
-      return;
-    }
-    const extension = selectedFile.name.slice(-4);
+/* Alternativa para fazer a verificação em tempo real:
+ * Pedir o identificador (Nome ou CPF) na hora de gerar o formulário
+ *  */
 
-    setLoading(true);
-    let currentFile = selectedFile;
+const identificadores = ["Nome", "CPF"];
 
-    let formData = new FormData();
-
-    formData.append("file", currentFile);
-    for (const [key, value] of Object.entries(form.current)) {
-      formData.append(key, value);
-    }
-
-    try {
-      const response = await axios.post(
-        BASEURL + "/api/novo_beneficiario",
-        formData,
-        { headers: { responseType: "blob" } }
-      );
-
-      console.log(response);
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "Untitled.csv"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-    } catch (e: any) {
-      if (e.response.status === 422) alert("Dados conflitantes");
-      else alert("Problemas com o banco de dados");
-    }
-  }
+function InputForm(props: any) {
+  async function handleSubmit() {}
 
   function handleFormChange(event: any) {
     const label = event.target.id.slice(4);
     const value = event.target.value;
     form.current[label] = value;
+    if (identificadores.includes(label) && props.op === Operation.UPDATE) {
+      getPreenchidos("Felipe", value)
+        .then((val) => {
+          let newDisable = [...disable];
+          let newValue = [...pHolder];
+          console.log(newValue);
+          cols.forEach((el: any, i: number) => {
+            // console.log(el.props.children[0].props.children);
+            if (
+              el.props.children[0].props.children in val &&
+              el.props.children[0].props.children !== label
+            ) {
+              newDisable[i] = true;
+              newValue[i] = val[el.props.children[0].props.children];
+              form.current[el.props.children[0].props.children] =
+                val[el.props.children[0].props.children];
+            }
+          });
+          setDisable(newDisable);
+          setPlaceholder(newValue);
+        })
+        .catch((err) => {
+          if (err.request.status === 404) {
+            let newDisable = new Array(disable.length).fill(false);
+            let newValue = new Array(value.length).fill("");
+            setDisable(newDisable);
+            setPlaceholder(newValue);
+          }
+        });
+    } else if (identificadores.includes(label) && props.op === Operation.NOVO) {
+      getPreenchidos("Felipe", value)
+        .then((val) => {
+          setShowError("Usuário já existe");
+          setDisableButton(true);
+        })
+        .catch((err) => {
+          setShowError("");
+          setDisableButton(false);
+        });
+    }
   }
 
-  function onFileChange(event: any) {
-    setSelectedFile(event.target.files[0]);
-  }
+  const form = useRef<LooseObject>({});
 
-  function handleNewUser(event: any) {
-    const label = "new_user";
-    const value = event.target.checked;
-    form.current[label] = value;
-    console.log(form.current);
-  }
+  const [disable, setDisable] = useState<boolean[]>(
+    new Array(props.info.length).fill(false)
+  );
+  const [pHolder, setPlaceholder] = useState<string[]>(
+    new Array(props.info.length).fill("")
+  );
+  const [showError, setShowError] = useState<string>("");
+  const [disableButton, setDisableButton] = useState<boolean>(false);
 
-  const [selectedFile, setSelectedFile] = useState<any>();
-  const form = useRef<LooseObject>({ new_user: false });
-  const [loading, setLoading] = useState<boolean>(false);
-
+  console.log(pHolder);
   sortInfo(props.info);
-  const cols = props.info.map((el: string) => {
+  let cols: any[] = props.info.map((el: string, i: number) => {
     form.current[el] = "";
     return (
       <Form.Group className="mb-3" key={el} controlId={`form${el}`}>
         <Form.Label>{el}</Form.Label>
-        <Form.Control type="text" onChange={handleFormChange} />
+        <Form.Control
+          placeholder={pHolder[i]}
+          type="text"
+          onChange={handleFormChange}
+          disabled={disable[i]}
+        />
       </Form.Group>
     );
   });
-  console.log(form);
+
   return (
     <Form>
       {cols}
-      <Form.Group className="mb-3" controlId="formBasicCheckbox">
-        <Form.Check type="checkbox" label="New user" onChange={handleNewUser} />
-      </Form.Group>
-      <Form.Control type="file" onChange={onFileChange} />
+      {showError && (
+        <>
+          <small style={{ color: "red" }}>*{showError}</small>
+          <br />
+        </>
+      )}
       <Button
         style={{ width: "100%" }}
         data-testid="upload"
         variant="primary"
         onClick={handleSubmit}
+        disabled={disableButton}
       >
-        {loading && (
-          <Spinner
-            as="span"
-            animation="grow"
-            size="sm"
-            role="status"
-            aria-hidden="true"
-          />
-        )}
         Download!
       </Button>
     </Form>
   );
 }
 
-export default InputInfo;
+export default InputForm;

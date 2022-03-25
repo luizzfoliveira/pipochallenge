@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASEURL } from "../utils";
+import { BASEURL } from "../../utils";
 import { Options } from "react-select";
 
 export const getPlanos = async (): Promise<Options<string>> => {
