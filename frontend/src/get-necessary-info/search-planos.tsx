@@ -3,48 +3,42 @@ import Select from "react-select";
 import { getNecessaryInfo } from "./get-necessary-info";
 import { getPlanos } from "./get-planos";
 import { Options } from "react-select";
-import { Card, Form, Button } from "react-bootstrap";
-import { sortInfo } from "./utils";
-
-function InputInfo(props: any) {
-  sortInfo(props.info);
-  const cols = props.info.map((el: string) => (
-    <Form.Group className="mb-3" controlId={`form${el}`}>
-      <Form.Label>{el}</Form.Label>
-      <Form.Control type="text" />
-    </Form.Group>
-  ));
-  return (
-    <Form>
-      {cols}
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
-  );
-}
+import { Card, Button } from "react-bootstrap";
+import InputInfo from "../user-manipulation/add-user";
 
 function SearchPlanos() {
   const planosSearch = useRef<string>("");
   // const info = useRef<string[]>([]);
   async function generateInfo() {
-    console.log();
-    const inf = await getNecessaryInfo(planosSearch.current);
-    setInfo(inf);
-    setShowInfo(true);
+    if (!planosSearch.current) {
+      setShowError("Planos em branco");
+      setShowInfo(false);
+      return;
+    }
+    setShowError("");
+    try {
+      const inf = await getNecessaryInfo(planosSearch.current);
+      setInfo(inf);
+      setShowInfo(true);
+    } catch (e: any) {
+      if (e.response.status === 404) alert("Plano não encontrado");
+      else alert("Problemas com o banco de dados");
+    }
   }
 
   function handlePlanoSelect(e: Options<string>) {
     planosSearch.current = e.map((el: any) => el.value).join("/");
   }
 
+  const [showError, setShowError] = useState<string>("");
   const [showInfo, setShowInfo] = useState(false);
-
   const [info, setInfo] = useState<string[]>();
 
   const [planos, setPlanos] = useState<Options<string>>();
   useEffect(() => {
-    getPlanos().then(setPlanos);
+    getPlanos()
+      .then(setPlanos)
+      .catch((err) => alert("Problemas com banco de dados"));
   }, []);
 
   return (
@@ -52,6 +46,12 @@ function SearchPlanos() {
       <Card style={{ width: "50%", marginLeft: "auto", marginRight: "auto" }}>
         <Card.Body>
           <Select isMulti options={planos} onChange={handlePlanoSelect} />
+          {showError && (
+            <>
+              <small style={{ color: "red" }}>*{showError}</small>
+              <br />
+            </>
+          )}
           <Button className="generate-info" onClick={generateInfo}>
             Gerar Formulário
           </Button>

@@ -1,3 +1,9 @@
+export interface LooseObject {
+  [key: string]: any;
+}
+
+export const BASEURL = "http://localhost:8000";
+
 export const sortInfo = (info: string[]) => {
   const order = ["Nome", "CPF"];
   let i = 0;
@@ -11,5 +17,3 @@ export const sortInfo = (info: string[]) => {
     }
   }
 };
-
-export const BASEURL = "http://localhost:8000";
