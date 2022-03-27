@@ -4,15 +4,13 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import SignUp from "./login/signup";
 import AreaUsuario from "./user-manipulation/area-usuario";
-import SearchPlanos from "./user-manipulation/search-planos";
-import { Operation } from "./utils";
 import DeleteUsuario from "./user-manipulation/delete-usuario";
 import InitTabela from "./init-db/init-from-tabela";
 import Login from "./login/login";
 import ProtectedUserRoute from "./protect-user-route";
 import Sidenav from "./sidenav";
 import Layout from "./Layout";
-import ProtectedLoginRoute from "./protect-user-route copy";
+import ProtectedLoginRoute from "./protect-login-route";
 import Planos from "./Planos";
 import UpdateUsuario from "./user-manipulation/update-usuario";
 import NovoUsuario from "./user-manipulation/novo-usuario";
@@ -47,8 +45,6 @@ render(
             </ProtectedLoginRoute>
           }
         />
-        {/* <Route path="area_empresa/*" element={<AreaUsuario />} /> */}
-        {/* <Route path="/" element={<Home />} /> */}
         <Route
           element={
             <Sidenav>

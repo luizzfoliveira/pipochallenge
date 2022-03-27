@@ -60,7 +60,7 @@ function Sidenav({ children }: any) {
 
   function handleDownload() {
     axios({
-      url: `${BASEURL}/api/table?empresa=${empresa}`,
+      url: `${BASEURL}/api/tabela?empresa=${empresa}`,
       method: "GET",
       responseType: "blob",
       headers: { Authorization: `Bearer ${token}` },

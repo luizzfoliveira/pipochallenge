@@ -4,7 +4,7 @@ import { getNecessaryInfo } from "./get-necessary-info/get-necessary-info";
 import { getPlanos } from "./get-necessary-info/get-planos";
 import { Options } from "react-select";
 import { Card, Button, Form, Container } from "react-bootstrap";
-import InputForm from "./add-user";
+import InputForm from "./input-form";
 import { getPreenchidos } from "./get-preenchidos";
 import {
   getSessionEmpresa,

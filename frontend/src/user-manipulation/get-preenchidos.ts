@@ -7,7 +7,7 @@ export const getPreenchidos = async (
   token: string
 ): Promise<LooseObject> => {
   const response = await axios.get(
-    `${BASEURL}/api/user?empresa=${empresa}&ident=${user}`,
+    `${BASEURL}/api/usuarios?empresa=${empresa}&ident=${user}`,
     { headers: { Authorization: `Bearer ${token}` } }
   );
   return response.data;

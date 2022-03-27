@@ -11,7 +11,7 @@ export const uploadTabela = async (
     formData.append("base", file);
     formData.append("empresa", empresa);
 
-    let response = await axios.post(BASEURL + "/api/upload_table", formData, {
+    let response = await axios.post(BASEURL + "/api/tabela", formData, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response;

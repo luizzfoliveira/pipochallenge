@@ -20,7 +20,7 @@ function InputForm(props: any) {
         props.empresa,
         form.current,
         AxiosMethod.POST,
-        "/api/novo_beneficiario",
+        "/api/usuarios/novo",
         props.token
       );
       if (response.status === 200) {
@@ -47,7 +47,7 @@ function InputForm(props: any) {
         props.empresa,
         form.current,
         AxiosMethod.PATCH,
-        "/api/update_user",
+        "/api/usuarios/update",
         props.token
       );
       if (response.status === 200) {
@@ -68,7 +68,7 @@ function InputForm(props: any) {
         props.empresa,
         form.current,
         AxiosMethod.PATCH,
-        "/api/change_user",
+        "/api/usuarios/alterar",
         props.token
       );
       if (response.status === 200) {

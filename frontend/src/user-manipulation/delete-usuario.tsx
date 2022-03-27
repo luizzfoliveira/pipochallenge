@@ -4,7 +4,7 @@ import { LooseObject, getSessionEmpresa, getSessionToken } from "../utils";
 import { deleteUser } from "./del";
 import { getPreenchidos } from "./get-preenchidos";
 
-function DeleteUsuario(props: any) {
+function DeleteUsuario() {
   const token = getSessionToken();
   const empresa = getSessionEmpresa();
 

@@ -13,7 +13,7 @@ export const deleteUser = async (
 ): Promise<AxiosResponse> => {
   const body: UserDelete = { empresa: empresa, identificador: ident };
   try {
-    const response = await axios.delete(BASEURL + "/api/delete_user", {
+    const response = await axios.delete(BASEURL + "/api/usuarios/deletar", {
       data: body,
       headers: { Authorization: `Bearer ${token}` },
     });
