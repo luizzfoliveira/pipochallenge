@@ -2,8 +2,8 @@ from fastapi import HTTPException, Request
 import jwt
 from os import getenv
 
-DBPORT = '27017'
-DBHOST = 'localhost'
+DBPORT = getenv('DB_PORT')
+DBHOST = getenv('DB_HOST')
 
 JWT_SECRET = getenv('JWT_SECRET')
 

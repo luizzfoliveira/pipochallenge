@@ -1,4 +1,4 @@
-import { Navbar, Container, Nav } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 export default function App() {
   function hyperlink(address: string, descricao: string) {
@@ -7,7 +7,7 @@ export default function App() {
 
   return (
     <Container>
-      <h1>
+      <h1 data-testid="home-text">
         Bem vindo(a)!!
         <br />
         Aqui, você pode ver {hyperlink(
