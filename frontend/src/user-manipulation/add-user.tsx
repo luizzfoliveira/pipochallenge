@@ -1,10 +1,91 @@
 import { useState, useRef } from "react";
 import { Form, Button } from "react-bootstrap";
-import { LooseObject, sortInfo } from "../utils";
+import { AxiosMethod, LooseObject, sortInfo } from "../utils";
 import { Operation } from "../utils";
+import { manipularUsuario } from "./manipular-usuario";
 
 function InputForm(props: any) {
-  async function handleSubmit() {}
+  console.log(props);
+  async function handleSubmit() {
+    if (Object.values(form.current).some((el) => !el)) {
+      setShowMessage({
+        show: true,
+        success: false,
+        message: "Preencha todos os campos",
+      });
+      return;
+    }
+    if (props.op === Operation.NOVO) {
+      const response = await manipularUsuario(
+        props.empresa,
+        form.current,
+        AxiosMethod.POST,
+        "/api/novo_beneficiario",
+        props.token
+      );
+      if (response.status === 200) {
+        setShowMessage({
+          show: true,
+          success: true,
+          message: "Usuário adicionado com sucesso",
+        });
+      } else if (response.status === 409) {
+        setShowMessage({
+          show: true,
+          success: false,
+          message: response.data.message,
+        });
+      } else {
+        setShowMessage({
+          show: true,
+          success: false,
+          message: "Problema ao adicionar usuário",
+        });
+      }
+    } else if (props.op === Operation.UPDATE) {
+      const response = await manipularUsuario(
+        props.empresa,
+        form.current,
+        AxiosMethod.PATCH,
+        "/api/update_user",
+        props.token
+      );
+      if (response.status === 200) {
+        setShowMessage({
+          show: true,
+          success: true,
+          message: "Informações acrescentadas com sucesso",
+        });
+      } else {
+        setShowMessage({
+          show: true,
+          success: false,
+          message: "Problema ao fazer update do usuário",
+        });
+      }
+    } else if (props.op === Operation.ALTERAR) {
+      const response = await manipularUsuario(
+        props.empresa,
+        form.current,
+        AxiosMethod.PATCH,
+        "/api/change_user",
+        props.token
+      );
+      if (response.status === 200) {
+        setShowMessage({
+          show: true,
+          success: true,
+          message: "Informações alteradas com sucesso",
+        });
+      } else {
+        setShowMessage({
+          show: true,
+          success: false,
+          message: "Problema ao fazer alterações no usuário",
+        });
+      }
+    }
+  }
 
   function handleFormChange(event: any) {
     const label = event.target.id.slice(4);
@@ -14,19 +95,32 @@ function InputForm(props: any) {
 
   const form = useRef<LooseObject>({});
 
-  const [showError, setShowError] = useState<string>("");
+  const [showMessage, setShowMessage] = useState<LooseObject>({
+    show: false,
+    success: false,
+    message: "",
+  });
+
+  let buttonName: string;
+  if (props.op === Operation.NOVO) buttonName = "Adicionar Usuário";
+  else if (props.op === Operation.UPDATE) buttonName = "Update Usuário";
+  else if (props.op === Operation.ALTERAR) buttonName = "Alterar Usuário";
+  else buttonName = "Modificar Usuário";
 
   sortInfo(props.info, props.userInfo);
-  let cols: any[] = props.info.map((el: string, i: number) => {
+  form.current = {};
+  let cols: any = props.info.map((el: string, i: number) => {
     let placeholder = "";
     let disable = false;
-    form.current[el] = "";
+    if (!(el in form.current)) form.current[el] = "";
     if (props.op === Operation.UPDATE && el in props.userInfo) {
       placeholder = props.userInfo[el];
       disable = true;
       form.current[el] = placeholder;
+    } else if (props.op === Operation.ALTERAR && el in props.userInfo) {
+      placeholder = props.userInfo[el];
+      form.current[el] = placeholder;
     }
-
     return (
       <Form.Group className="mb-3" key={el} controlId={`form${el}`}>
         <Form.Label>{el}</Form.Label>
@@ -39,13 +133,19 @@ function InputForm(props: any) {
       </Form.Group>
     );
   });
+  console.log("cols");
+  console.log(cols);
 
   return (
     <Form>
       {cols}
-      {showError && (
+      {showMessage.show && (
         <>
-          <small style={{ color: "red" }}>*{showError}</small>
+          <small
+            style={showMessage.success ? { color: "green" } : { color: "red" }}
+          >
+            *{showMessage.message}
+          </small>
           <br />
         </>
       )}
@@ -55,7 +155,7 @@ function InputForm(props: any) {
         variant="primary"
         onClick={handleSubmit}
       >
-        Download!
+        {buttonName}
       </Button>
     </Form>
   );
