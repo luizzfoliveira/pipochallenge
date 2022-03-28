@@ -1,6 +1,7 @@
 from fastapi import Body, Depends, FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 import pymongo
+from routers import planos
 from routers.utils.utils import check_token, DBHOST, DBPORT
 from routers import usuarios, tabela, login
 
@@ -18,6 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(usuarios.router)
+app.include_router(planos.router)
 app.include_router(tabela.router)
 app.include_router(login.router)
 

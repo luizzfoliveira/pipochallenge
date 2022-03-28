@@ -1,14 +1,18 @@
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card, Button, Form, Modal, Container } from "react-bootstrap";
 import { LooseObject, getSessionEmpresa, getSessionToken } from "../utils";
-import { deleteUser } from "./del-user";
+import Select, { Options } from "react-select";
+import { getPlanos } from "./get-necessary-info/get-planos";
 import { getPreenchidos } from "./get-preenchidos";
+import { deletePlano } from "./del-plano";
+import { getPlanosEmpresa } from "./get-necessary-info/get-empresa-planos";
 
-function DeleteUsuario() {
+function DeletePlano() {
   const token = getSessionToken();
   const empresa = getSessionEmpresa();
 
   const user = useRef<string>("");
+  const planosSearch = useRef<string[]>([]);
 
   const [showMessage, setShowMessage] = useState<LooseObject>({
     show: false,
@@ -16,6 +20,7 @@ function DeleteUsuario() {
     message: "",
   });
   const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [planos, setPlanos] = useState<Options<string>>();
   const [userInfo, setUserInfo] = useState<LooseObject>({});
 
   async function handleDelete() {
@@ -47,13 +52,18 @@ function DeleteUsuario() {
   }
 
   async function handleConfirm() {
-    const response = await deleteUser(empresa, user.current, token);
+    const response = await deletePlano(
+      empresa,
+      user.current,
+      planosSearch.current,
+      token
+    );
     setShowAlert(false);
     if (response.status === 200) {
       setShowMessage({
         show: true,
         success: true,
-        message: "Usuário deletado com sucesso",
+        message: "Plano(s) deletado(s) com sucesso",
       });
     } else if (response.status === 404) {
       setShowMessage({
@@ -61,11 +71,17 @@ function DeleteUsuario() {
         success: false,
         message: "Usuário não encontrado",
       });
+    } else if (response.status === 422) {
+      setShowMessage({
+        show: true,
+        success: false,
+        message: "Usuário não possui nenhum plano",
+      });
     } else {
       setShowMessage({
         show: true,
         success: false,
-        message: "Problema ao deletar o usuário",
+        message: "Problema ao deletar o plano(s)",
       });
     }
   }
@@ -75,12 +91,26 @@ function DeleteUsuario() {
     user.current = value;
   }
 
+  function handlePlanoSelect(e: Options<string>) {
+    planosSearch.current = e.map((el: any) => el.value);
+  }
+
+  useEffect(() => {
+    getPlanosEmpresa(empresa, token)
+      .then(setPlanos)
+      .catch((err) => alert("Problemas com banco de dados"));
+  }, []);
+
   return (
     <>
       <Container>
         <Card style={{ width: "50%", marginLeft: "auto", marginRight: "auto" }}>
           <Card.Body>
             <Form>
+              <Form.Group className="mb-3" key="0" controlId="formPlanos">
+                <Form.Label>Planos</Form.Label>
+                <Select isMulti options={planos} onChange={handlePlanoSelect} />
+              </Form.Group>
               <Form.Group
                 className="mb-3"
                 key="1"
@@ -111,7 +141,7 @@ function DeleteUsuario() {
                 style={{ backgroundColor: "#153db4" }}
                 onClick={handleDelete}
               >
-                Deletar Usuário
+                Deletar Plano(s)
               </Button>
             </Form>
           </Card.Body>
@@ -119,7 +149,7 @@ function DeleteUsuario() {
       </Container>
       <Modal show={showAlert} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirmar Exclusão do Usuário?</Modal.Title>
+          <Modal.Title>Confirmar Exclusão do Plano?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <pre>{JSON.stringify(userInfo, null, 2)}</pre>
@@ -137,4 +167,4 @@ function DeleteUsuario() {
   );
 }
 
-export default DeleteUsuario;
+export default DeletePlano;

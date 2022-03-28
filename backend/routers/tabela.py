@@ -5,6 +5,7 @@ from .utils.utils import check_token, DBHOST, DBPORT, identificadores
 import functools
 import pandas as pd
 import shutil
+import re
 
 router = APIRouter(
 	prefix="/api/tabela",
@@ -16,8 +17,8 @@ router = APIRouter(
 def download_table(response: Response, empresa: str):
 	try:
 		client = pymongo.MongoClient(f"mongodb://{DBHOST}:{DBPORT}/")
-		usuarios_db = client["planos_usuarios"]
-		usuarios_info = usuarios_db[empresa]
+		usuarios_db = client[empresa]
+		usuarios_info = usuarios_db["usuarios"]
 
 		result = usuarios_info.find({}, {"_id": 0})
 		if not result:
@@ -48,6 +49,12 @@ async def add_table(request: Request, response: Response):
 
 	df = pd.read_csv(base.filename)
 
+	if "Planos" in df.columns:
+		df['Planos'] = df.Planos.apply(
+			lambda x: [i.strip() for i in 
+			re.split(r',(?=([^\"\']*[\"\'][^\"\']*[\"\'])*[^\"\']*$)', x) if i is not None]
+		)
+
 	# Verificar se há duplicatas na tabela e, caso houver, retornar
 	# os identificadores para o usuário
 	duplicates = [df.duplicated(subset=[x], keep=False)
@@ -67,8 +74,8 @@ async def add_table(request: Request, response: Response):
 
 	try:
 		client = pymongo.MongoClient(f"mongodb://{DBHOST}:{DBPORT}/")
-		usuarios_db = client["planos_usuarios"]
-		usuarios_info = usuarios_db[empresa]
+		usuarios_db = client[empresa]
+		usuarios_info = usuarios_db["usuarios"]
 
 		usuarios_info.drop()
 

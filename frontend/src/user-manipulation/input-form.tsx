@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { AxiosMethod, LooseObject, sortInfo } from "../utils";
 import { Operation } from "../utils";
@@ -100,6 +100,7 @@ function InputForm(props: any) {
     success: false,
     message: "",
   });
+  const [cols, setCols] = useState<any>();
 
   let buttonName: string;
   if (props.op === Operation.NOVO) buttonName = "Adicionar Usuário";
@@ -107,32 +108,36 @@ function InputForm(props: any) {
   else if (props.op === Operation.ALTERAR) buttonName = "Alterar Usuário";
   else buttonName = "Modificar Usuário";
 
-  sortInfo(props.info, props.userInfo);
-  form.current = {};
-  let cols: any = props.info.map((el: string, i: number) => {
-    let placeholder = "";
-    let disable = false;
-    if (!(el in form.current)) form.current[el] = "";
-    if (props.op === Operation.UPDATE && el in props.userInfo) {
-      placeholder = props.userInfo[el];
-      disable = true;
-      form.current[el] = placeholder;
-    } else if (props.op === Operation.ALTERAR && el in props.userInfo) {
-      placeholder = props.userInfo[el];
-      form.current[el] = placeholder;
-    }
-    return (
-      <Form.Group className="mb-3" key={el} controlId={`form${el}`}>
-        <Form.Label>{el}</Form.Label>
-        <Form.Control
-          placeholder={placeholder}
-          type="text"
-          onChange={handleFormChange}
-          disabled={disable}
-        />
-      </Form.Group>
-    );
-  });
+  useEffect(() => {
+    form.current = { Planos: props.planos };
+    sortInfo(props.info, props.userInfo);
+    let colsHere: any = props.info.map((el: string, i: number) => {
+      let placeholder = "";
+      let disable = false;
+      if (!(el in form.current)) form.current[el] = "";
+      if (props.op === Operation.UPDATE && el in props.userInfo) {
+        placeholder = props.userInfo[el];
+        disable = true;
+        form.current[el] = placeholder;
+      } else if (props.op === Operation.ALTERAR && el in props.userInfo) {
+        placeholder = props.userInfo[el];
+        form.current[el] = placeholder;
+      }
+      return (
+        <Form.Group className="mb-3" key={el} controlId={`form${el}`}>
+          <Form.Label>{el}</Form.Label>
+          <Form.Control
+            placeholder={placeholder}
+            type="text"
+            onChange={handleFormChange}
+            disabled={disable}
+          />
+        </Form.Group>
+      );
+    });
+    setCols(colsHere);
+  }, [props]);
+
   console.log("cols");
   console.log(cols);
 
@@ -150,7 +155,7 @@ function InputForm(props: any) {
         </>
       )}
       <Button
-        style={{ width: "100%" }}
+        style={{ backgroundColor: "#153db4", width: "100%" }}
         data-testid="upload"
         variant="primary"
         onClick={handleSubmit}

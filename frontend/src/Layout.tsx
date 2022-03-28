@@ -13,7 +13,7 @@ export default function Layout({ children }: any) {
   return (
     <>
       <Container>
-        <Navbar>
+        <Navbar bg="white">
           <Navbar.Brand href="/">
             <img
               src="https://global-uploads.webflow.com/5ee0d13e1d0466f2353dcb99/604b853988008d3835ce3dc5_Logo%20%E2%80%93%20Pipo%20Sau%CC%81de.svg"
@@ -21,7 +21,7 @@ export default function Layout({ children }: any) {
               alt=""
             />
           </Navbar.Brand>
-          <Nav className="me-auto">
+          <Nav>
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="/planos">Planos</Nav.Link>
             {!showLogin ? (

@@ -2,6 +2,7 @@ export enum Operation {
   NOVO,
   UPDATE,
   ALTERAR,
+  DEL_PLANO,
 }
 
 export enum AxiosMethod {

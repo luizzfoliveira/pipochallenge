@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import Select from "react-select";
+import Select, { Options } from "react-select";
 import { getNecessaryInfo } from "./get-necessary-info/get-necessary-info";
-import { getPlanos } from "./get-necessary-info/get-planos";
-import { Options } from "react-select";
 import { Card, Button, Form, Container } from "react-bootstrap";
 import InputForm from "./input-form";
 import { getPreenchidos } from "./get-preenchidos";
@@ -12,6 +10,7 @@ import {
   LooseObject,
   Operation,
 } from "../utils";
+import { getPlanosEmpresa } from "./get-necessary-info/get-empresa-planos";
 
 function SearchPlanos(props: any) {
   const [showError, setShowError] = useState<string>("");
@@ -21,7 +20,7 @@ function SearchPlanos(props: any) {
 
   const user = useRef<string>("");
   const userInfo = useRef<void | LooseObject>({});
-  const planosSearch = useRef<string>("");
+  const planosSearch = useRef<string[]>([]);
 
   const token = getSessionToken();
   const empresa = getSessionEmpresa();
@@ -31,7 +30,12 @@ function SearchPlanos(props: any) {
     if (props.op === Operation.ALTERAR) {
       try {
         userInfo.current = await getPreenchidos(empresa, user.current, token);
-        setInfo(Object.keys(userInfo.current));
+        const inf = Object.keys(userInfo.current);
+        const index = inf.indexOf("Planos");
+        if (index !== -1) {
+          inf.splice(index, 1);
+        }
+        setInfo(inf);
         setShowError("");
         setShowInfo(true);
       } catch (err: any) {
@@ -47,7 +51,7 @@ function SearchPlanos(props: any) {
     }
     setShowError("");
     try {
-      const inf = await getNecessaryInfo(planosSearch.current);
+      const inf: any = await getNecessaryInfo(planosSearch.current.join("/"));
 
       setInfo(inf);
     } catch (e: any) {
@@ -94,11 +98,11 @@ function SearchPlanos(props: any) {
   }
 
   function handlePlanoSelect(e: Options<string>) {
-    planosSearch.current = e.map((el: any) => el.value).join("/");
+    planosSearch.current = e.map((el: any) => el.value);
   }
 
   useEffect(() => {
-    getPlanos()
+    getPlanosEmpresa(empresa, token)
       .then(setPlanos)
       .catch((err) => alert("Problemas com banco de dados"));
   }, []);
@@ -130,12 +134,17 @@ function SearchPlanos(props: any) {
                 <br />
               </>
             )}
-            <Button className="generate-info" onClick={generateInfo}>
+            <Button
+              style={{ backgroundColor: "#153db4" }}
+              className="generate-info"
+              onClick={generateInfo}
+            >
               Gerar Formulário
             </Button>
           </Form>
           {showInfo && (
             <InputForm
+              planos={planosSearch.current}
               info={info}
               op={props.op}
               userInfo={userInfo.current}

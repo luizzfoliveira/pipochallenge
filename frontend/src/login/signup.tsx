@@ -63,7 +63,10 @@ function SignUp(props: any) {
                 <br />
               </>
             )}
-            <Button className="generate-info" onClick={handleSignup}>
+            <Button
+              style={{ backgroundColor: "#153db4" }}
+              onClick={handleSignup}
+            >
               SignUp
             </Button>
           </Form>

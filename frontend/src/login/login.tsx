@@ -85,7 +85,11 @@ function Login(props: any) {
                 <br />
               </>
             )}
-            <Button className="generate-info" onClick={handleLogin}>
+            <Button
+              style={{ backgroundColor: "#153db4" }}
+              className="generate-info"
+              onClick={handleLogin}
+            >
               Login
             </Button>
           </Form>

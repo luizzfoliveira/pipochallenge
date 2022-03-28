@@ -98,7 +98,11 @@ function InitTabela(props: any) {
                   <br />
                 </>
               )}
-              <Button className="init-db" onClick={handleUpload}>
+              <Button
+                style={{ backgroundColor: "#153db4" }}
+                className="init-db"
+                onClick={handleUpload}
+              >
                 Fazer Upload
               </Button>
             </Form>

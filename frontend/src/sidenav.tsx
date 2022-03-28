@@ -8,7 +8,8 @@ import {
   SidebarContent,
 } from "react-pro-sidebar";
 import { FiHome, FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
-import { GrTableAdd } from "react-icons/gr";
+import { AiFillSwitcher } from "react-icons/ai";
+import { BsTable } from "react-icons/bs";
 import {
   FaUserCog,
   FaDownload,
@@ -16,7 +17,7 @@ import {
   FaUserMinus,
   FaUserPlus,
 } from "react-icons/fa";
-import { MdLogout } from "react-icons/md";
+import { MdLogout, MdOutlineAddCircle } from "react-icons/md";
 import "react-pro-sidebar/dist/css/styles.css";
 import "./sidenav.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -77,6 +78,10 @@ function Sidenav({ children }: any) {
                 Área da Empresa
                 <Link to="/area_empresa" />
               </MenuItem>
+              <MenuItem active={true} icon={<MdOutlineAddCircle />}>
+                Adicionar Plano
+                <Link to="/add_plano" />
+              </MenuItem>
             </Menu>
             <div className="closemenu" onClick={menuIconClick}>
               {menuCollapse ? <FiArrowRightCircle /> : <FiArrowLeftCircle />}
@@ -97,11 +102,15 @@ function Sidenav({ children }: any) {
                 <Link to="/alterar_usuario" />
               </MenuItem>
               <MenuItem icon={<FaUserMinus />}>
-                Deletar
+                Deletar Usuário
                 <Link to="/delete_usuario" />
               </MenuItem>
+              <MenuItem icon={<AiFillSwitcher />}>
+                Deletar Plano(s)
+                <Link to="/delete_planos" />
+              </MenuItem>
               <hr className="solid" />
-              <MenuItem icon={<GrTableAdd />}>
+              <MenuItem icon={<BsTable />}>
                 Inicializar
                 <Link to="/init_db" />
               </MenuItem>
