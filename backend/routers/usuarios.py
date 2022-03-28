@@ -77,7 +77,6 @@ def set_new_user(response: Response, body = Body(...)):
 
 @router.patch('/update')
 def add_plano_user(response: Response, body = Body(...)):
-	print(body)
 	# Verificação se a sintaxe do request está correta
 	try:
 		info = body['info']
@@ -178,7 +177,6 @@ def delete_user(response: Response, body = Body(...)):
 @router.delete('/delete_plano')
 def delete_plano_from_user(response: Response, body: dict = Body(...)):
 	# Verificação se a sintaxe do request está correta
-	print(body)
 	try:
 		ident = body['identificador']
 		planos = body['planos']
@@ -202,9 +200,7 @@ def delete_plano_from_user(response: Response, body: dict = Body(...)):
 			response.status_code = 422
 			return {"message": "Usuário não possui nenhum plano"}
 		
-		print(planos)
 		novos_planos = [x for x in ori_info['Planos'] if x not in planos]
-		print(novos_planos)
 		usuarios_info.update_one(
 			{"$or": [{x: ident} for x in identificadores]},
 			{"$set": {"Planos": novos_planos}}

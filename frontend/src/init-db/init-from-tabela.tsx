@@ -3,7 +3,7 @@ import { Button, Card, Container, Form, Modal } from "react-bootstrap";
 import { getSessionToken, getSessionEmpresa, LooseObject } from "../utils";
 import { uploadTabela } from "./upload-tabela";
 
-function InitTabela(props: any) {
+function InitTabela() {
   const token = getSessionToken();
   const empresa = getSessionEmpresa();
 

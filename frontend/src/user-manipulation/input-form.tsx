@@ -5,7 +5,6 @@ import { Operation } from "../utils";
 import { manipularUsuario } from "./manipular-usuario";
 
 function InputForm(props: any) {
-  console.log(props);
   async function handleSubmit() {
     if (Object.values(form.current).some((el) => !el)) {
       setShowMessage({
@@ -137,9 +136,6 @@ function InputForm(props: any) {
     });
     setCols(colsHere);
   }, [props]);
-
-  console.log("cols");
-  console.log(cols);
 
   return (
     <Form>

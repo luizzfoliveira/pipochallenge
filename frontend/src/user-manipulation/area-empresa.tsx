@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 
-export default function AreaUsuario(props: any) {
+export default function AreaUsuario() {
   function hyperlink(address: string, descricao: string) {
     return <a href={address}>{descricao}</a>;
   }

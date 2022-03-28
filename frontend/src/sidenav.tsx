@@ -17,7 +17,8 @@ import {
   FaUserMinus,
   FaUserPlus,
 } from "react-icons/fa";
-import { MdLogout, MdOutlineAddCircle } from "react-icons/md";
+import { BiCog } from "react-icons/bi";
+import { MdLogout } from "react-icons/md";
 import "react-pro-sidebar/dist/css/styles.css";
 import "./sidenav.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -78,7 +79,7 @@ function Sidenav({ children }: any) {
                 Área da Empresa
                 <Link to="/area_empresa" />
               </MenuItem>
-              <MenuItem active={true} icon={<MdOutlineAddCircle />}>
+              <MenuItem active={true} icon={<BiCog />}>
                 Gerenciar Planos
                 <Link to="/gerenciar_planos" />
               </MenuItem>

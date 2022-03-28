@@ -21,7 +21,7 @@ def compare_lists(*args):
 def test_acme_co():
 	planos = ["Norte Europa", "Dental Sorriso"]
 	response = requests.get(BASE_URL + '/api/info?planos=' + '/'.join(planos))
-	print(response.json())
+
 	info = response.json()['info']
 	assert compare_lists(info, ["Nome", "CPF", "Data Admissão", "Email",
 	"Peso (kg)", "Altura (cm)"])
