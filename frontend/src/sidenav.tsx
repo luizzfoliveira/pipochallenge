@@ -101,13 +101,13 @@ function Sidenav({ children }: any) {
                 Alterar
                 <Link to="/alterar_usuario" />
               </MenuItem>
-              <MenuItem icon={<FaUserMinus />}>
-                Deletar Usuário
-                <Link to="/delete_usuario" />
-              </MenuItem>
               <MenuItem icon={<AiFillSwitcher />}>
                 Deletar Plano(s)
                 <Link to="/delete_planos" />
+              </MenuItem>
+              <MenuItem icon={<FaUserMinus />}>
+                Deletar Usuário
+                <Link to="/delete_usuario" />
               </MenuItem>
               <hr className="solid" />
               <MenuItem icon={<BsTable />}>

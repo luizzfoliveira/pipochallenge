@@ -83,6 +83,8 @@ def get_planos(response: Response):
 
 		result = planos_info.find()
 
+		print("aqui")
+
 		return {"planos": [r['plano'] for r in result]}
 	except:
 		response.status_code = 500

@@ -7,7 +7,7 @@ export default function AreaUsuario(props: any) {
 
   return (
     <Container
-      style={{ width: "60%", marginLeft: "auto", marginRight: "auto" }}
+      style={{ width: "70%", marginLeft: "250px", marginRight: "auto" }}
     >
       <h2>
         Bem vindo(a) à área da sua empresa!!
@@ -41,7 +41,7 @@ export default function AreaUsuario(props: any) {
           <li>
             {hyperlink(
               "/delete_planos",
-              "removendo um funcionário de um plano"
+              "removendo plano(s) de um funcionário"
             )}
             ; e
           </li>
