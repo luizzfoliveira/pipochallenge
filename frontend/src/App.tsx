@@ -54,7 +54,7 @@ export default function App() {
           }
         >
           <Route path="area_empresa" element={<AreaUsuario />} />
-          <Route path="manipular_planos" element={<ManipularPlanos />} />
+          <Route path="gerenciar_planos" element={<ManipularPlanos />} />
           <Route path="novo_usuario" element={<NovoUsuario />} />
           <Route path="update_usuario" element={<UpdateUsuario />} />
           <Route path="alterar_usuario" element={<AlterarUsuario />} />

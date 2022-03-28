@@ -79,12 +79,12 @@ Ex.:
 ```
 {
 	info: {
-		Planos: ["Norte Europa"]
+		Planos: ["Norte Europa"],
 		Nome: "Coiote",
 		CPF: "000.000.000-01",
 		Data Admissão: "1949",
 		Email: "wiliee.coyote@acme.co"
-	}
+	},
 	empresa: "Acme Co"
 }
 ```
@@ -99,11 +99,11 @@ Ex.:
 ```
 {
 	info: {
-		Planos: ["Dental Sorriso"]
+		Planos: ["Dental Sorriso"],
 		Nome: "Coiote",
 		Peso (kg): "6",
 		Altura (cm): "170"
-	}
+	},
 	empresa: "Acme Co"
 }
 ```
@@ -118,7 +118,7 @@ Ex.:
 	info: {
 		Nome: "Coiote",
 		Peso (kg): "60",
-	}
+	},
 	empresa: "Acme Co"
 }
 ```
@@ -131,8 +131,8 @@ Esta rota deleta um(ns) plano(s) da coluna "Planos" de um funcionário. Basta fo
 
 ```
 {
-	identificador: "000.000.000-01" (ou "Coiote")
-	empresa: "Acme Co"
+	identificador: "000.000.000-01" (ou "Coiote"),
+	empresa: "Acme Co",
 	planos: ["Dental Sorriso", "Norte Europa"]
 }
 ```
@@ -144,7 +144,119 @@ Ex.:
 
 ```
 {
-	identificador: "000.000.000-01" (ou "Coiote")
+	identificador: "000.000.000-01" (ou "Coiote"),
 	empresa: "Acme Co"
+}
+```
+
+## Tabela
+
+Essas rotas facilitam a visualização e criação do banco de dados pelo usuário. Antes de utilizar este programa, provavelmente as informações dos funcionários estavam sendo guardadas em planilhas (Excel, Google Docs, etc.). Por isso, essa integração passa a ser necessária.
+
+### GET
+
+#### /api/tabela
+
+Esta rota fornece todo o banco de dados como uma tabela CSV. Basta informar, por uma query, o nome da empresa ("?empresa=...").
+
+### POST
+
+#### /api/post
+
+Esta rota facilita a inicialização do banco de dados pelo usuário. Basta fornecer o arquivo com nome "base" e o nome da empresa. É necessário exportar a tabela do Excel ou Google Docs ou outra plataforma, como um arquivo CSV separado por vírgulas.Então, é criado um banco de dados com o nome da empresa e uma coleção "usuarios" com as informações passadas pela tabela.
+
+## Planos
+
+Essas rotas fornecem o gerenciamento de quais planos uma empresa contrata.
+
+### GET
+
+#### /api/empresa/planos
+
+Esta rota fornece todos os planos de uma empresa especificada como query ("?empresa=...").
+
+### POST
+
+#### /api/empresa/planos
+
+Esta rota possibilita adicionar novos planos para uma empresa. Basta fornecer quais planos se deseja adicionar e o nome da empresa no corpo do pedido.
+Ex.:
+
+```
+{
+	planos: ["Pampulha Intermédica", "Dental Sorriso", "Mente Sã, Corpo São", "Norte Europa"],
+	empresa: "Tio Patinhas Bank"
+}
+```
+
+### DELETE
+
+#### /api/empresa/planos
+
+Esta rota deleta planos de uma empresa. O corpo é similar ao do item anterior
+Ex.:
+
+```
+{
+	planos: ["Norte Europa"],
+	empresa: "Tio Patinhas Bank"
+}
+```
+
+## LOGIN
+
+Estas rotas possibilitam a criação de novos usuários para gerenciamento de informações da empresa. Elas retornam um JWT para ser utilizado nas chamadas ao servidor que utilizam autenticação. Por isso, estas rotas não necessitam de autenticação
+
+### POST
+
+#### /api/signup
+
+Esta rota cria um novo usuário no banco de dados, retornando o JWT que esse usuário deve utilizar, sempre que for fazer alguma chamada ao servidor que necessite de autenticação. No corpo basta passar o nome da empresa e a senha.
+Ex.:
+
+```
+{
+	senha: "senha secreta",
+	empresa: "Tio Patinhas Bank"
+}
+```
+
+#### /api/login
+
+Para usuários já cadastrados ao banco de dados, é possível fazer um login para receber o JWT. O servidor compara a senha passada à que está no banco de dados e valida ou não o login do usuário. O corpo é similar ao exemplo anterior.
+Ex.:
+
+```
+{
+	senha: "senha secreta",
+	empresa: "Tio Patinhas Bank"
+}
+```
+
+## Rotas Genéricas
+
+Além das rotas apresentadas anteriormente, há três outras rotas genéricas. Essas rotas são para pesquisar quais as informações serão necessárias para cadastrar um novo funcionário, dado planos específicos. Elas também retornam todos os planos cadastrados no banco de dados e adicionam planos ao banco de dados.
+
+### GET
+
+#### /api/planos
+
+Esta rota não necessita de parâmetros nem de JWT. Ela simplesmente retorna todos os planos cadastrados no banco de dados.
+
+#### /api/info
+
+Esta rota pesquisa por planos passados como uma query, sem necessidade de JWT. Os planos devem ser separados por uma barra para evitar erros com vírgulas (?planos=P1/P2/...). Ela retorna todas as informações necessárias para cadastrar um funcionário em todos os planos fornecidos. Em casos de dois ou mais planos precisarem da mesma informação, essa informação é retornada uma única vez ao usuário, para evitar repetições.
+
+### POST
+
+#### /api/info
+
+Esta rota adiciona novos planos ao banco de dados, sendo necessário fornecer um JWT válido para acessar essa rota. Para adicionar novas informações ao banco, basta fornecer o nome do plano e quais informações esse plano necessita no corpo do request.
+Ex.:
+
+```
+{
+	plano: "Novo Plano",
+	info: ["Nome", ...]
 }
 ```

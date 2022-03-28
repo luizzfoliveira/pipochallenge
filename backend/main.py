@@ -47,8 +47,16 @@ def get_necessary_info(response: Response, planos: str, request: Request):
 
 @app.post('/api/info', dependencies=[Depends(check_token)])
 def set_new_info(response: Response, body: dict = Body(...)):
-	plano = body['plano'].strip()
-	info = [i.strip() for i in body['info']]
+	try:
+		plano = body['plano'].strip()
+		if isinstance(body['info'], str):
+			info = [i.strip() for i in body['info']]
+		else:
+			info = body['info']
+	except:
+		response.status_code = 400
+		return {"message": "Informações faltando"}
+
 	try:
 		client = pymongo.MongoClient(f"mongodb://{DBHOST}:{DBPORT}/")
 		planos_db = client["planos"]

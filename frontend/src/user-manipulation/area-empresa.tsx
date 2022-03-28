@@ -12,11 +12,14 @@ export default function AreaUsuario(props: any) {
       <h2>
         Bem vindo(a) à área da sua empresa!!
         <br />
-        Aqui, é possível gerenciar as informações dos beneficiários dos planos
-        de saúde contratados por sua emrpesa.
+        Aqui, é possível {hyperlink(
+          "/gerenciar_planos",
+          "gerenciar os planos"
+        )}{" "}
+        contratados por sua emrpesa.
         <br />
-        Para isso, {hyperlink("add_plano", "adicione planos")} à sua empresa,
-        para, então, gerir as informações de seus usuários:
+        Além disso, é possível gerenciar as informações dos beneficiários dos
+        planos de saúde contratados por sua emrpesa:
         <ul>
           <li>
             {hyperlink("/novo_usuario", "adicionando um novo beneficiário")};
