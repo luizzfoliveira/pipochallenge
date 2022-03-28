@@ -79,8 +79,8 @@ function Sidenav({ children }: any) {
                 <Link to="/area_empresa" />
               </MenuItem>
               <MenuItem active={true} icon={<MdOutlineAddCircle />}>
-                Adicionar Plano
-                <Link to="/add_plano" />
+                Gerenciar Planos
+                <Link to="/manipular_planos" />
               </MenuItem>
             </Menu>
             <div className="closemenu" onClick={menuIconClick}>

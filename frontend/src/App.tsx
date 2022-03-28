@@ -13,7 +13,7 @@ import UpdateUsuario from "./user-manipulation/update-usuario";
 import NovoUsuario from "./user-manipulation/novo-usuario";
 import AlterarUsuario from "./user-manipulation/alterar-usuario";
 import DeletePlano from "./user-manipulation/delete-plano";
-import AddPlanos from "./user-manipulation/add-plano";
+import ManipularPlanos from "./user-manipulation/planos";
 import Home from "./Home";
 
 export default function App() {
@@ -54,7 +54,7 @@ export default function App() {
           }
         >
           <Route path="area_empresa" element={<AreaUsuario />} />
-          <Route path="add_plano" element={<AddPlanos />} />
+          <Route path="manipular_planos" element={<ManipularPlanos />} />
           <Route path="novo_usuario" element={<NovoUsuario />} />
           <Route path="update_usuario" element={<UpdateUsuario />} />
           <Route path="alterar_usuario" element={<AlterarUsuario />} />

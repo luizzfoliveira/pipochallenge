@@ -61,7 +61,7 @@ O servidor utiliza de autenticação com JWT, sendo que ele é fornecido sempre 
 
 ## Funcionários
 
-As rotas de gestão de funcionários são:
+Essas rotas fornecem as opções de gestão das informações de usuários.
 
 ### GET
 

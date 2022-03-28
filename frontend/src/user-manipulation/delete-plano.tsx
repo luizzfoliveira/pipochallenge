@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Card, Button, Form, Modal, Container } from "react-bootstrap";
 import { LooseObject, getSessionEmpresa, getSessionToken } from "../utils";
 import Select, { Options } from "react-select";
-import { getPlanos } from "./get-necessary-info/get-planos";
 import { getPreenchidos } from "./get-preenchidos";
 import { deletePlano } from "./del-plano";
 import { getPlanosEmpresa } from "./get-necessary-info/get-empresa-planos";
